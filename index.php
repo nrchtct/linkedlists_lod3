@@ -400,8 +400,8 @@ foreach ($right_items as $name) {
 	if (count($types)==1) echo $types[0];
 	else {
 		foreach ($types as $i=>$t) {
-			if (count($types)==$i+1) echo " &amp; ";
 			echo "<a href='#$t'>$t</a> ";
+			if (count($types)> $i+1) echo " &amp; ";
 		}		
 	}
 	
@@ -424,11 +424,11 @@ foreach ($items as $item) {
 	}
 	
 	echo "<li class='$class_slug'>";
-	echo "<a href='{$item["link"]}'";
+	echo "<a href='{$item["url"]}'";
 	if ($item["hover"]!="") echo " title='{$item["hover"]}' ";
 	echo	">";
 		
-	if ($item["img"]!="") echo "<img alt='{$item["title"]}' src='{$app_path}banners/{$item["img"]}'>";
+	if ($item["img"]!="") echo "<img alt='{$item["title"]}' src='{$app_path}img/banner/{$item["img"]}'>";
 
 	$regexp = "/(".implode($middle_items, "|").")/i";
 	error_log(print_r($regexp, true));
