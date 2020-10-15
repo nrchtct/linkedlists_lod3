@@ -251,8 +251,13 @@ li { 	margin: 0; padding: 0; }
 
 /* layout */
 
+#l, #m, #r {
+	background-color: xred;
+}
+
+h1 {width: 25vw; white-space: normal;}
 #l {width: 20vw; margin: 0 3vw;}
-#m {width: 45vw; padding-top: 5.825em; padding-left: 4vw; }
+#m {width: 45vw; margin-top: 1.5em; padding-left: 4vw; }
 #r {width: 20vw; padding-top: 4.325em; right: 3vw; }
 
 /*  search  */
@@ -260,12 +265,12 @@ li { 	margin: 0; padding: 0; }
 #m h2 { float: left; } 
 
 #ll_search {
-	margin: 0; padding: 0;
-	margin: 1.5em 0;
-	border: 1px solid #999;
-	height: 2em;
+	padding: 0;
+	margin: 2em 0 2.5em 0;
+	border: 0px;
 	width: 15vw;
-	float: right;
+	display: block;
+	border: 1px solid #999;
 }
 
 
@@ -303,9 +308,10 @@ li { 	margin: 0; padding: 0; }
 
 #l p a, #m li a { font-weight: normal; }
 
+#m li { cursor: default;}
 #m li span { cursor: help;}
-
-#m li em { font-style: normal; border-bottom: 1px dotted #999; cursor: pointer;}
+#m li em { font-style: normal; cursor: pointer; }
+#m li em:hover {text-decoration: underline;}
 
 /* authors */
 #r ul { margin-top: .5em; float: right;}
@@ -323,6 +329,7 @@ li { 	margin: 0; padding: 0; }
 }
 
 #canvas {	z-index: -1; }
+
 #l, #m, #r {	z-index: 1; }
 
 
@@ -395,18 +402,19 @@ foreach ($right_items as $name) {
 
 
 	
-<h2><?php
+<h2>
+<input type="search" placeholder="Search" id="ll_search" name="q">
+	<?php
 	
 	if (count($types)==1) echo $types[0];
 	else {
 		foreach ($types as $i=>$t) {
+			if (count($types)==$i+1) echo " &amp; ";
 			echo "<a href='#$t'>$t</a> ";
-			if (count($types)> $i+1) echo " &amp; ";
 		}		
 	}
 	
 ?></h2>
-<input type="search" id="ll_search" name="q">
 <ul>
 
 <?php
@@ -424,14 +432,13 @@ foreach ($items as $item) {
 	}
 	
 	echo "<li class='$class_slug'>";
-	echo "<a href='{$item["url"]}'";
+	echo "<a href='{$item["link"]}'";
 	if ($item["hover"]!="") echo " title='{$item["hover"]}' ";
 	echo	">";
 		
-	if ($item["img"]!="") echo "<img alt='{$item["title"]}' src='{$app_path}img/banner/{$item["img"]}'>";
+	if ($item["img"]!="") echo "<img alt='{$item["title"]}' src='{$app_path}banners/{$item["img"]}'>";
 
 	$regexp = "/(".implode($middle_items, "|").")/i";
-	error_log(print_r($regexp, true));
   $item["info"] = preg_replace($regexp, "<em>$1</em>", $item["info"]); 
 
 	echo "{$item["title"]}</a> {$item["info"]}</li>\n";
@@ -460,7 +467,7 @@ if (window.NodeList && !NodeList.prototype.forEach) {
 
 
 var website_title = "<?php echo $website_title ?>";
-var view = 0; // 1: keywords, 2: types, 3: people
+var view = 0; // 1: left, 2: types, 3: right, 4: search
 var vin = -1; // index of keyword or person
 var hash = '';
 var l = []; var m = []; var r = [];
@@ -483,7 +490,7 @@ var strokeColor = '50,50,50';
 var darkmodeToggle = -1;	
 var gap = 200;
 var types = ['<?php echo implode("','", $types) ?>'];
-
+var search_box = x("#ll_search");
 
 
 function items() {
@@ -508,6 +515,16 @@ function items() {
 		// right
 		else if (view==3) {	
 			for (var i = 0; i < rm[vin].length; i++) rm[vin][i].classList.remove("hidden");
+		}
+		else if (view==4) {
+			
+			var query = decodeURIComponent(hash.substring(2)).toLowerCase();
+			
+			X("#m li").forEach(function(e){				
+				if (e.outerHTML.toLowerCase().includes(query)) e.classList.remove("hidden")			
+				else e.classList.add("hidden")			
+			});
+			
 		}
 	}
 }
@@ -701,6 +718,7 @@ function check_view() {
 	
 	vin = types.indexOf(hash);
 
+	// selected item type
 	if (vin>-1) {
 		view = 2;	
 		
@@ -718,16 +736,26 @@ function check_view() {
 			}
 		}
 
-		document.title = website_title+" · "+types[vin];			
+		document.title = website_title+" · "+types[vin];
+		search_box.value="";
 	}
+	// active search
+	else if (hash.startsWith("q=")) {
+		view = 4;
+		document.title = website_title+" · "+decodeURIComponent(hash.substring(2));
+		search_box.value = decodeURIComponent(hash.substring(2));
+	}
+	// active facet
 	else {
+		search_box.value="";
+				
 		if (types.length>1) for (var i = 0; i < types.length; i++) {
 			x("#m h2 a:nth-of-type("+(i+1)+")").setAttribute("href", "#"+types[i])
 		}
 
 		X("#l li").forEach(function(e){
 			var id = e.id;
-			if (hash==id) {
+			if (id!="" && hash==id) {
 				view=1;
 				vin=getIndex(e);
 				e.classList.add("active");
@@ -737,7 +765,7 @@ function check_view() {
 		
 		X("#r li").forEach(function(e){
 			var id = e.id;
-			if (hash==id) {
+			if (id!="" && hash==id) {
 				view=3;
 				vin=getIndex(e);
 				e.classList.add("active");
@@ -748,9 +776,11 @@ function check_view() {
 	
 	if (view==0) {
 		x("h1").classList.add('passive');
-		document.title = website_title;
-		hash="";
-		history.pushState("", document.title, window.location.pathname + window.location.search);
+
+		if (window.location.hash!="") {			
+			history.pushState("", document.title, window.location.pathname+window.location.search);
+		}
+		document.title = website_title;			
 	}
 	else x("h1").classList.remove('passive');
 }
@@ -940,10 +970,10 @@ function hashchange(e) {
 window.onhashchange = hashchange;
 
 X("#l li span, #r li span").forEach(function(el) {
-	el.onclick = function(e){		
+	el.onclick = function(e){
 		var id = e.target.parentNode.id;
 		if (hash == id) {
-			history.pushState("", document.title, window.location.pathname + window.location.search);
+			history.pushState("", document.title, window.location.pathname);
 			hash="";
 			redraw_staged();
 		}
@@ -953,46 +983,49 @@ X("#l li span, #r li span").forEach(function(el) {
 });
 
 X("#m li em").forEach(function(el) {
-	el.onclick = function(e){		
-		
+	el.onclick = function(e){
+
 		var text = e.target.textContent;
-		console.log(text);
-		// if (hash == id) {
-		// 	history.pushState("", document.title, window.location.pathname + window.location.search);
-		// 	hash="";
-		// 	redraw_staged();
-		// }
-		// else window.location.hash = id;
+		search_box.value=text;
+		searchchange();
 		e.preventDefault();
 	}
 });
 
-x("#ll_search").change = function(e){				
-	var text = e.target.value;
-	console.log(text);
-	// if (hash == id) {
-	// 	history.pushState("", document.title, window.location.pathname + window.location.search);
-	// 	hash="";
-	// 	redraw_staged();
-	// }
-	// else window.location.hash = id;
-	e.preventDefault();
+function searchchange(){
+	var text = search_box.value;
+	
+	if (text=="") {
+		window.location.hash="";
+		redraw_staged();
+	}
+	else window.location.hash = "q="+text;
+	
 };
 
+search_box.onchange = searchchange;
+
+// cancel search
+search_box.oninput = function(e){
+	if (e.target.value=="") window.location.hash="";
+}
+
 x("h1").onclick = function(e){
-	history.pushState("", document.title, window.location.pathname + window.location.search);
-	hash="";
-	redraw_staged();
+
 	setTimeout(function(){
 		window.scrollTo({ top: 0, left: 0, behavior: 'smooth' });		
 	}, 500);
+	
+	if (hash=="") return;
+	hash="";
+	redraw_staged();
 	e.preventDefault();	
 };
 
 document.onkeyup = function(e) {
    if (e.key === "Escape") {
 		 window.scrollTo({ top: 0, left: 0, behavior: 'smooth' });
-		 history.pushState("", document.title, window.location.pathname + window.location.search);
+		 search_box.blur();
 		 hash="";
 		 redraw_staged();
 	 }

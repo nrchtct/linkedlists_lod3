@@ -19,7 +19,7 @@ $contact_details ='
 // should match column names in data.csv
 $facet_left = "keywords";
 $facet_right = "organizations";
-$facet_middle = "";
+$facet_middle = "collaborators";
 
 // should be used in type column
 $types = array("Events", "Projects", "Publications");
