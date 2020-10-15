@@ -410,7 +410,8 @@ foreach ($right_items as $name) {
 	else {
 		foreach ($types as $i=>$t) {
 			if (count($types)==$i+1) echo " &amp; ";
-			echo "<a href='#$t'>$t</a> ";
+			else if ($i>0) echo ", ";
+			echo "<a href='#$t'>$t</a>";
 		}		
 	}
 	
