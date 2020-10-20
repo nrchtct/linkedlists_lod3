@@ -255,7 +255,7 @@ li { 	margin: 0; padding: 0; }
 	background-color: xred;
 }
 
-h1 {width: 25vw; white-space: normal;}
+h1 {width: 22.5vw; white-space: normal;}
 #l {width: 20vw; margin: 0 3vw;}
 #m {width: 45vw; margin-top: 1.5em; padding-left: 4vw; }
 #r {width: 20vw; padding-top: 4.325em; right: 3vw; }

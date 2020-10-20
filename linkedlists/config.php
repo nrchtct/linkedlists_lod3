@@ -2,7 +2,7 @@
 
 // $data_url = "https://gist.githubusercontent.com/alliyya/d43b8cd389eec3e6306f35eac5733076/raw/fc9b897f93a59e7267d8e9be17bc1f8d8a7f38ad/clode_data.csv"; // leave empty if local data.csv is used
 $data_url = "https://gist.githubusercontent.com/alliyya/d43b8cd389eec3e6306f35eac5733076/raw/5d11c698eb0fa1a5b837554aaefc7e0bbeb96d46/clode_data_extra.csv"; // This has the additional data including organizations
-
+$data_url = "";
 $website_title = "Linked Open Cultural Data in Canada";
 $website_url = "https://mariandoerk.de/linkedlists/globalvoics/"; // with trailing slash
 
