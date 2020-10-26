@@ -2,7 +2,7 @@
 
 $data_url = "https://docs.google.com/spreadsheets/d/e/2PACX-1vTjgIjA2npCEQrqKQWMjVjZE0pdSa9wdQ6_GkHPz3y4eEuDw2-DBErcAZx0KkleFNSNXNNhnr7FWtws/pub?gid=0&single=true&output=csv"; // directly from spreadsheet
 
-$website_title = "Linked Open Cultural Data in Canada";
+$website_title = "Linking Open Cultural Data in Canada";
 $website_url = "https://uclab.fh-potsdam.de/lod3/"; // with trailing slash
 
 $website_description = "Recent activity related to linked open cultural data, with a focus on Canadian initiatives and diversity matters over the past 5 years.";
