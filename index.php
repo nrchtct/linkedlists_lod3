@@ -493,6 +493,12 @@ var gap = 200;
 var types = ['<?php echo implode("','", $types) ?>'];
 var search_box = x("#ll_search");
 
+// remove ems from titles
+X("#m li span").forEach(function(e){
+	var title = e.getAttribute("title");
+	title = title.replace(/<em>/g, "").replace(/<\/em>/g, "");
+	e.setAttribute("title", title);
+ });
 
 function items() {
 
